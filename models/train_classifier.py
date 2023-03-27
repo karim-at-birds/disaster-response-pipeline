@@ -13,9 +13,8 @@ from nltk.stem.wordnet import WordNetLemmatizer
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
 from sklearn.base import BaseEstimator, TransformerMixin
-from sklearn.preprocessing import FunctionTransformer
 from sklearn.pipeline import Pipeline, FeatureUnion
-from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.model_selection import train_test_split
 from sklearn.multioutput import MultiOutputClassifier
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.ensemble import RandomForestClassifier
