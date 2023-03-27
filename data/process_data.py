@@ -38,6 +38,7 @@ def clean_data(df):
     df = pd.concat([df,categories],axis=1)
 
     return df
+
 def save_data(df, database_filename):
     engine = create_engine('sqlite:///' + database_filename)
     df.to_sql('MainTable', engine, index=False)  
