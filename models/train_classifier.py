@@ -68,7 +68,7 @@ def build_model():
         ])),
         ("clf",MultiOutputClassifier(RandomForestClassifier(n_estimators=12)))
     ])
-
+    return pipeline_improved
 
 def evaluate_model(model, X_test, Y_test, category_names):
     y_pred_improved = model.predict(X_test)
