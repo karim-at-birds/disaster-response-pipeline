@@ -43,6 +43,8 @@ class SentimentTransformer(BaseEstimator, TransformerMixin):
         return self
 
     def transform(self, X):
+        if type(X) is list:
+            X = pd.Series(X)
         out =  pd.DataFrame([x for x in X.apply(lambda x: SentimentIntensityAnalyzer().polarity_scores(x))])
         return out
 # load data
