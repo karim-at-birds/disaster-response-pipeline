@@ -15,22 +15,23 @@ from sqlalchemy import create_engine
 app = Flask(__name__)
 
 def tokenize(text):
-    tokens = word_tokenize(text)
-    lemmatizer = WordNetLemmatizer()
+    text = re.sub(r"[^a-zA-Z0-9]", " ", text.lower().strip()) #normalize
+    text = word_tokenize(text) #tokanize
+    
+    # should I even remove stopwords? tweets are short enough as it is
+    text = [w for w in text if w not in stopwords.words("english")] 
 
-    clean_tokens = []
-    for tok in tokens:
-        clean_tok = lemmatizer.lemmatize(tok).lower().strip()
-        clean_tokens.append(clean_tok)
+    # iterate through each token
+    clean_tokens = [WordNetLemmatizer().lemmatize(w) for w in text]
 
     return clean_tokens
 
 # load data
-engine = create_engine('sqlite:///../data/YourDatabaseName.db')
-df = pd.read_sql_table('YourTableName', engine)
+engine = create_engine('sqlite:///../data/DisasterResponse.db')
+df = pd.read_sql_table('MainTable', engine)
 
 # load model
-model = joblib.load("../models/your_model_name.pkl")
+model = joblib.load("../models/model.joblib")
 
 
 # index webpage displays cool visuals and receives user input text for model
