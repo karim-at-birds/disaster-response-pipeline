@@ -8,8 +8,9 @@ from nltk.tokenize import word_tokenize
 from flask import Flask
 from flask import render_template, request, jsonify
 from plotly.graph_objs import Bar
-from sklearn.externals import joblib
+#from sklearn.externals import joblib
 from sqlalchemy import create_engine
+from joblib import dump, load
 
 
 app = Flask(__name__)
@@ -31,7 +32,7 @@ engine = create_engine('sqlite:///../data/DisasterResponse.db')
 df = pd.read_sql_table('MainTable', engine)
 
 # load model
-model = joblib.load("../models/model.joblib")
+model = load("../models/model.joblib")
 
 
 # index webpage displays cool visuals and receives user input text for model
