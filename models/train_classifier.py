@@ -30,7 +30,7 @@ nltk.download('vader_lexicon',quiet=True)
 
 
 def load_data(database_filepath):
-    engine = create_engine('sqlite:///' + database_filename)
+    engine = create_engine('sqlite:///' + database_filepath)
     df = pd.read_sql_table("MainTable", engine)
     X = df["message"]
     y = df.drop(columns=["id","message","original","genre"])
