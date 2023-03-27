@@ -1,24 +1,81 @@
 import sys
+import os
+import re
+
+import pandas as pd
+import numpy as np
+from sqlalchemy import create_engine
+
+import nltk
+from nltk.tokenize import word_tokenize 
+from nltk.corpus import stopwords
+from nltk.stem.wordnet import WordNetLemmatizer
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
+
+from sklearn.base import BaseEstimator, TransformerMixin
+from sklearn.preprocessing import FunctionTransformer
+from sklearn.pipeline import Pipeline, FeatureUnion
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.multioutput import MultiOutputClassifier
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import classification_report
+
+from joblib import dump
+
+nltk.download('punkt')
+nltk.download('stopwords')
+nltk.download('wordnet') # download for lemmatization
+nltk.download('vader_lexicon',quiet=True)
 
 
 def load_data(database_filepath):
-    pass
+    engine = create_engine('sqlite:///' + database_filename)
+    df = pd.read_sql_table("MainTable", engine)
+    X = df["message"]
+    y = df.drop(columns=["id","message","original","genre"])
+    y.related.replace(2,1,inplace=True)
+    return X,y,y.columns
+
 
 
 def tokenize(text):
-    pass
+    text = re.sub(r"[^a-zA-Z0-9]", " ", text.lower().strip()) #normalize
+    text = word_tokenize(text) #tokanize
+    
+    # should I even remove stopwords? tweets are short enough as it is
+    text = [w for w in text if w not in stopwords.words("english")] 
+
+    # iterate through each token
+    text = [WordNetLemmatizer().lemmatize(w) for w in text]
+
+    return text
+
+class SentimentTransformer(BaseEstimator, TransformerMixin):
+    def fit(self, X, y=None):
+        return self
+
+    def transform(self, X):
+        out =  pd.DataFrame([x for x in X.apply(lambda x: SentimentIntensityAnalyzer().polarity_scores(x))])
+        return out
 
 
 def build_model():
-    pass
+    pipeline_improved = Pipeline([
+        ("Transf", FeatureUnion([
+            ('TfidVect', TfidfVectorizer(tokenizer=tokenize, norm=None)),
+            ('Sentiment', SentimentTransformer())
+        ])),
+        ("clf",MultiOutputClassifier(RandomForestClassifier(n_estimators=12)))
+    ])
 
 
 def evaluate_model(model, X_test, Y_test, category_names):
-    pass
-
+    y_pred_improved = model.predict(X_test)
+    print(classification_report(Y_test, y_pred_improved, target_names=category_names)) 
 
 def save_model(model, model_filepath):
-    pass
+    dump(model, os.path.join(model_filepath , 'model.joblib'))
 
 
 def main():
