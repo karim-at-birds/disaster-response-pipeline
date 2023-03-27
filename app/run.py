@@ -1,6 +1,7 @@
 import json
 import plotly
 import pandas as pd
+import re
 
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
@@ -13,8 +14,13 @@ from sklearn.base import BaseEstimator, TransformerMixin
 from sqlalchemy import create_engine
 from joblib import dump, load
 import nltk
+from nltk.stem.wordnet import WordNetLemmatizer
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
+
+nltk.download('punkt')
+nltk.download('stopwords')
+nltk.download('wordnet')
 nltk.download('vader_lexicon',quiet=True)
 
 
