@@ -9,8 +9,13 @@ from flask import Flask
 from flask import render_template, request, jsonify
 from plotly.graph_objs import Bar
 #from sklearn.externals import joblib
+from sklearn.base import BaseEstimator, TransformerMixin
 from sqlalchemy import create_engine
 from joblib import dump, load
+import nltk
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
+
+nltk.download('vader_lexicon',quiet=True)
 
 
 app = Flask(__name__)
