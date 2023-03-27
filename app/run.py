@@ -27,6 +27,13 @@ def tokenize(text):
 
     return clean_tokens
 
+class SentimentTransformer(BaseEstimator, TransformerMixin):
+    def fit(self, X, y=None):
+        return self
+
+    def transform(self, X):
+        out =  pd.DataFrame([x for x in X.apply(lambda x: SentimentIntensityAnalyzer().polarity_scores(x))])
+        return out
 # load data
 engine = create_engine('sqlite:///../data/DisasterResponse.db')
 df = pd.read_sql_table('MainTable', engine)
