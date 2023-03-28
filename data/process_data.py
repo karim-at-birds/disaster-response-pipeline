@@ -4,6 +4,18 @@ import pandas as pd
 from sqlalchemy import create_engine
 
 def load_data(messages_filepath, categories_filepath):
+'''
+load_data
+Load data from csv files and merge to a single pandas dataframe
+
+Input:
+messages_filepathe filepath to messages csv file
+categories_filepath filepath to categories csv file
+
+Returns:
+df datafram merging categories and messages
+'''
+
 # load messages dataset
     messages = pd.read_csv(messages_filepath)
 # load categories dataset
