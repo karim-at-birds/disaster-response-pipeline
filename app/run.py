@@ -62,7 +62,7 @@ def index():
     
     # extract data needed for visuals
     # TODO: Below is an example - modify to extract data for your own visuals
-    genre_counts = df.groupby('genre').count()['message']
+    genre_counts = df.groupby('genre').count()['message'].sort_values(ascending=False)
     genre_names = list(genre_counts.index)
     df_genre_sum = df.drop(columns=['id','message','original']).groupby('genre').sum().T
     news_sum = df_genre_sum.news.sort_values(ascending=False)
@@ -91,15 +91,15 @@ def index():
         },
         {
             'data': [
-                Bar(
+                Bar(name="News",
                     x=list(news_sum.index),
                     y=news_sum
                 ),
-                Bar(
+                Bar(name="Direct",
                     x=list(direct_sum.index),
                     y=direct_sum
                 ),
-                Bar(
+                Bar(name="Social",
                     x=list(social_sum.index),
                     y=social_sum
                 )
@@ -111,7 +111,7 @@ def index():
                 },
                 'xaxis': {
                     'title': "Categories"
-                }
+                },
             }
         }
     ]
