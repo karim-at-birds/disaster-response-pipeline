@@ -87,6 +87,15 @@ class SentimentTransformer(BaseEstimator, TransformerMixin):
 
 
 def build_model():
+    """
+    build_model
+    Builds a machine learning model using the scikit-learn Pipeline and MultiOutputClassifier classes. Optimizes parameters using Gridsearch.
+
+    Returns:
+    model(object): 
+        A scikit-learn Pipeline object that includes a TfidfVectorizer, a SentimentTransformer (based on NLTK's SentimentIntensityAnalyzer), and a 
+        MultiOutputClassifier(RandomForestClassifier).
+    """
     pipeline = Pipeline([
         ("Transf", FeatureUnion([
             ('TfidVect', TfidfVectorizer(tokenizer=tokenize, norm=None)),
