@@ -4,17 +4,17 @@ import pandas as pd
 from sqlalchemy import create_engine
 
 def load_data(messages_filepath, categories_filepath):
-'''
-load_data
-Load data from csv files and merge to a single pandas dataframe
+    '''
+    load_data
+    Load data from csv files and merge to a single pandas dataframe
 
-Input:
-messages_filepathe filepath to messages csv file
-categories_filepath filepath to categories csv file
+    Input:
+    messages_filepathe filepath to messages csv file
+    categories_filepath filepath to categories csv file
 
-Returns:
-df datafram merging categories and messages
-'''
+    Returns:
+    df datafram merging categories and messages
+    '''
 
 # load messages dataset
     messages = pd.read_csv(messages_filepath)
@@ -25,6 +25,23 @@ df datafram merging categories and messages
     return df
 
 def clean_data(df):
+    """
+        Cleans and prepares a pandas DataFrame containing tweets.
+
+        Parameters:
+        -----------
+        df: pandas.DataFrame
+            The DataFrame containing the data to be cleaned.
+
+        Returns:
+        --------
+        df: pandas.DataFrame
+            The cleaned DataFrame, with the following changes:
+            - The original 'categories' column has been split into separate columns, with category names as column headers.
+            - The values in the category columns have been converted to integers.
+            - Duplicates have been removed from the DataFrame.
+"""
+
 # create a dataframe of the 36 individual category columns
     categories = df.categories.str.split(";",expand=True)
 # select the first row of the categories dataframe
