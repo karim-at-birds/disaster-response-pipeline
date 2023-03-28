@@ -38,6 +38,7 @@ def clean_data(df):
         - The original 'categories' column has been split into separate columns, with category names as column headers.
         - The values in the category columns have been converted to integers.
         - Duplicates have been removed from the DataFrame.
+        - The "related" category has been binarised.
     """
 
 # create a dataframe of the 36 individual category columns
@@ -57,6 +58,9 @@ def clean_data(df):
 
 # drop the original categories column from `df`
     df.drop(columns="categories", inplace=True)
+
+# binarise "related" category
+    df.related.replace(2,1,inplace=True)
 
 # remove duplicates
     df.drop_duplicates(inplace=True)
