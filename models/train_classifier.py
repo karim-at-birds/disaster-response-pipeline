@@ -55,6 +55,17 @@ def load_data(database_filepath):
 
 
 def tokenize(text):
+    """
+    tokenize
+    Normalizes, tokenizes, removes stopwords and lemmatizes text for use in a machine learning model.
+
+    Input:
+    text(str): The text to be tokenized.
+
+    Returns:
+    text(list): 
+        A list containing the normalized, tokenized, stopwords-removed, and lemmatized tokens.
+    """
     text = re.sub(r"[^a-zA-Z0-9]", " ", text.lower().strip()) #normalize
     text = word_tokenize(text) #tokanize
     
