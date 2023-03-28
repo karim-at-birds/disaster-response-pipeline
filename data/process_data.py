@@ -9,8 +9,8 @@ def load_data(messages_filepath, categories_filepath):
     Load data from csv files and merge to a single pandas dataframe
 
     Input:
-    messages_filepathe filepath to messages csv file
-    categories_filepath filepath to categories csv file
+    messages_filepath: filepath to messages csv file
+    categories_filepath: filepath to categories csv file
 
     Returns:
     df datafram merging categories and messages
@@ -26,21 +26,19 @@ def load_data(messages_filepath, categories_filepath):
 
 def clean_data(df):
     """
-        Cleans and prepares a pandas DataFrame containing tweets.
+    clean_data
+    Cleans and prepares a pandas DataFrame containing tweets.
 
-        Parameters:
-        -----------
-        df: pandas.DataFrame
-            The DataFrame containing the data to be cleaned.
+    Input:
+    df(pandas.DataFrame): The DataFrame containing the data to be cleaned.
 
-        Returns:
-        --------
-        df: pandas.DataFrame
-            The cleaned DataFrame, with the following changes:
-            - The original 'categories' column has been split into separate columns, with category names as column headers.
-            - The values in the category columns have been converted to integers.
-            - Duplicates have been removed from the DataFrame.
-"""
+    Returns:
+    df(pandas.DataFrame): 
+        The cleaned DataFrame, with the following changes:
+        - The original 'categories' column has been split into separate columns, with category names as column headers.
+        - The values in the category columns have been converted to integers.
+        - Duplicates have been removed from the DataFrame.
+    """
 
 # create a dataframe of the 36 individual category columns
     categories = df.categories.str.split(";",expand=True)
@@ -69,6 +67,13 @@ def clean_data(df):
     return df
 
 def save_data(df, database_filename):
+    """
+    save_data
+    Save DataFrame to SQLite database.
+    Input:
+    df (pandas.DataFrame): DataFrame to save to the database.
+    database_filename (str): File path to the SQLite database.
+    """
     engine = create_engine('sqlite:///' + database_filename)
     df.to_sql('MainTable', engine, index=False)  
 
