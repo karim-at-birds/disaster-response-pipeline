@@ -114,6 +114,19 @@ def build_model():
     return cv
 
 def evaluate_model(model, X_test, Y_test, category_names):
+    """
+    evaluate_model
+    Evaluates the performance of a machine learning model using the scikit-learn classification_report function.
+
+    Input:
+    model(object): The machine learning model to be evaluated.
+    X_test (pandas.Series): The DataFrame containing the messages of the test dataset.
+    Y_test(pandas.DataFrame): The DataFrame containing the categories of the test dataset.
+    category_names(list): A list of the names of the categories being predicted.
+
+    Returns:
+    None
+    """
     y_pred_improved = model.predict(X_test)
     print(classification_report(Y_test, y_pred_improved, target_names=category_names)) 
 
