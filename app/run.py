@@ -64,7 +64,8 @@ def index():
     # TODO: Below is an example - modify to extract data for your own visuals
     genre_counts = df.groupby('genre').count()['message']
     genre_names = list(genre_counts.index)
-    
+    news_sum = df.drop(columns=['id','message','original']).groupby('genre').sum().T.news
+    category_names = list(news_sum.index)
     # create visuals
     # TODO: Below is an example - modify to create your own visuals
     graphs = [
@@ -73,6 +74,24 @@ def index():
                 Bar(
                     x=genre_names,
                     y=genre_counts
+                )
+            ],
+
+            'layout': {
+                'title': 'Distribution of Message Genres',
+                'yaxis': {
+                    'title': "Count"
+                },
+                'xaxis': {
+                    'title': "Genre"
+                }
+            }
+        },
+        {
+            'data': [
+                Bar(
+                    x=category_names,
+                    y=news_sum
                 )
             ],
 
