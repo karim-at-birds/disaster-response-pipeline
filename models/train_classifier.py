@@ -131,6 +131,14 @@ def evaluate_model(model, X_test, Y_test, category_names):
     print(classification_report(Y_test, y_pred_improved, target_names=category_names)) 
 
 def save_model(model, model_filepath):
+    """
+    save_model
+    Saves a machine learning model to a joblib file.
+
+    Input:
+    model(object): The machine learning model to be saved.
+    model_filepath(str): The file path of the joblib file to save the model to.
+    """
     dump(model, os.path.join(model_filepath , 'model.joblib'))
 
 
