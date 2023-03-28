@@ -14,7 +14,7 @@ from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.pipeline import Pipeline, FeatureUnion
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.multioutput import MultiOutputClassifier
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.ensemble import RandomForestClassifier
@@ -29,12 +29,27 @@ nltk.download('vader_lexicon',quiet=True)
 
 
 def load_data(database_filepath):
+    """
+    load_data
+    Loads data from a SQLite database file and prepares it for use in a machine learning model.
+
+    Input:
+    database_filepath(str): The path to the SQLite database file.
+
+    Returns:
+    X(pandas.Series): 
+        A pandas Series containing the messages from the loaded data.
+    y(pandas.DataFrame): 
+        A pandas DataFrame containing the labels for the loaded data. The DataFrame has the following changes:
+        - The 'id', 'message', 'original', and 'genre' columns have been dropped.
+    columns(pandas.Index): 
+        A pandas Index containing the column names of the y DataFrame.
+    """
     engine = create_engine('sqlite:///' + database_filepath)
     df = pd.read_sql_table("MainTable", engine)
     df.dropna(subset=["message"], inplace=True)
     X = df["message"]
     y = df.drop(columns=["id","message","original","genre"])
-    y.related.replace(2,1,inplace=True)
     return X,y,y.columns
 
 
@@ -61,14 +76,22 @@ class SentimentTransformer(BaseEstimator, TransformerMixin):
 
 
 def build_model():
-    pipeline_improved = Pipeline([
+    pipeline = Pipeline([
         ("Transf", FeatureUnion([
             ('TfidVect', TfidfVectorizer(tokenizer=tokenize, norm=None)),
             ('Sentiment', SentimentTransformer())
         ])),
         ("clf",MultiOutputClassifier(RandomForestClassifier(n_estimators=12)))
     ])
-    return pipeline_improved
+    parameters = {
+        "Transf__TfidVect__norm" : [None,"l1","l2"],
+        "Transf__TfidVect__use_idf" : [True,False],
+        "clf__estimator__criterion" : ["gini", "entropy"],
+        "clf__estimator__n_estimators" : [8,12]
+        }
+
+    cv = GridSearchCV(pipeline, param_grid=parameters)
+    return cv
 
 def evaluate_model(model, X_test, Y_test, category_names):
     y_pred_improved = model.predict(X_test)
